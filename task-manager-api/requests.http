@@ -1,0 +1,170 @@
+@baseUrl = http://localhost:5000
+@contentType = application/json
+
+### Metadados da API
+GET {{baseUrl}}/
+
+### Healthcheck
+GET {{baseUrl}}/health
+
+################################################################
+# TASKS
+################################################################
+
+### Lista tasks (com nome de usuário/categoria e flag de atraso)
+GET {{baseUrl}}/tasks
+
+### Detalha uma task
+GET {{baseUrl}}/tasks/1
+
+### Detalha uma task inexistente (404)
+GET {{baseUrl}}/tasks/9999
+
+### Busca tasks (todos os filtros são opcionais)
+GET {{baseUrl}}/tasks/search?q=api&status=pending&priority=1&user_id=1
+
+### Estatísticas agregadas de tasks
+GET {{baseUrl}}/tasks/stats
+
+### Cria uma task
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+{
+  "title": "Nova task de teste",
+  "description": "Criada via arquivo .http",
+  "status": "pending",
+  "priority": 2,
+  "user_id": 1,
+  "category_id": 1,
+  "due_date": "2026-08-15",
+  "tags": ["teste", "http"]
+}
+
+### Cria uma task inválida (título curto -> 400)
+POST {{baseUrl}}/tasks
+Content-Type: {{contentType}}
+
+{
+  "title": "ab"
+}
+
+### Atualiza uma task (ajuste o id conforme necessário)
+PUT {{baseUrl}}/tasks/1
+Content-Type: {{contentType}}
+
+{
+  "status": "in_progress",
+  "priority": 1
+}
+
+### Remove uma task (ajuste o id conforme necessário)
+DELETE {{baseUrl}}/tasks/11
+
+################################################################
+# USERS
+################################################################
+
+### Lista usuários
+GET {{baseUrl}}/users
+
+### Detalha um usuário com suas tasks
+GET {{baseUrl}}/users/1
+
+### Lista as tasks de um usuário
+GET {{baseUrl}}/users/1/tasks
+
+### Cria um usuário
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "name": "Ana Costa",
+  "email": "ana@email.com",
+  "password": "1234",
+  "role": "user"
+}
+
+### Cria um usuário com email duplicado (409)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "name": "Duplicado",
+  "email": "joao@email.com",
+  "password": "1234"
+}
+
+### Atualiza um usuário
+PUT {{baseUrl}}/users/1
+Content-Type: {{contentType}}
+
+{
+  "name": "João Silva Atualizado",
+  "role": "manager",
+  "active": true
+}
+
+### Remove um usuário (e suas tasks) -- ajuste o id conforme necessário
+DELETE {{baseUrl}}/users/4
+
+################################################################
+# LOGIN
+################################################################
+
+### Login válido (seed: joao@email.com / 1234)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "joao@email.com",
+  "password": "1234"
+}
+
+### Login com senha incorreta (401)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "joao@email.com",
+  "password": "senha-errada"
+}
+
+################################################################
+# CATEGORIES
+################################################################
+
+### Lista categorias (com contagem de tasks)
+GET {{baseUrl}}/categories
+
+### Cria uma categoria
+POST {{baseUrl}}/categories
+Content-Type: {{contentType}}
+
+{
+  "name": "Documentação",
+  "description": "Tarefas de documentação",
+  "color": "#9b59b6"
+}
+
+### Atualiza uma categoria (ajuste o id conforme necessário)
+PUT {{baseUrl}}/categories/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Backend Atualizado",
+  "color": "#2980b9"
+}
+
+### Remove uma categoria (ajuste o id conforme necessário)
+DELETE {{baseUrl}}/categories/5
+
+################################################################
+# REPORTS
+################################################################
+
+### Relatório geral de produtividade
+GET {{baseUrl}}/reports/summary
+
+### Relatório de produtividade de um usuário
+GET {{baseUrl}}/reports/user/1
