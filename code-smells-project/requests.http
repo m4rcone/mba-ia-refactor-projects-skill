@@ -1,0 +1,154 @@
+@baseUrl = http://localhost:5001
+@contentType = application/json
+
+### Metadados da API
+GET {{baseUrl}}/
+
+### Healthcheck
+GET {{baseUrl}}/health
+
+################################################################
+# PRODUTOS
+################################################################
+
+### Lista produtos
+GET {{baseUrl}}/produtos
+
+### Busca produtos (todos os filtros são opcionais)
+GET {{baseUrl}}/produtos/busca?q=notebook&categoria=informatica&preco_min=50&preco_max=6000
+
+### Detalha um produto
+GET {{baseUrl}}/produtos/1
+
+### Detalha um produto inexistente (404)
+GET {{baseUrl}}/produtos/9999
+
+### Cria um produto
+POST {{baseUrl}}/produtos
+Content-Type: {{contentType}}
+
+{
+  "nome": "Mousepad Grande",
+  "descricao": "Mousepad speed 90x40cm",
+  "preco": 79.90,
+  "estoque": 40,
+  "categoria": "informatica"
+}
+
+### Atualiza um produto (ajuste o id conforme necessário)
+PUT {{baseUrl}}/produtos/1
+Content-Type: {{contentType}}
+
+{
+  "nome": "Notebook Gamer Pro",
+  "descricao": "Notebook potente para jogos - edição atualizada",
+  "preco": 6499.99,
+  "estoque": 8,
+  "categoria": "informatica"
+}
+
+### Remove um produto (ajuste o id conforme necessário)
+DELETE {{baseUrl}}/produtos/11
+
+################################################################
+# USUARIOS
+################################################################
+
+### Lista usuários
+GET {{baseUrl}}/usuarios
+
+### Detalha um usuário
+GET {{baseUrl}}/usuarios/1
+
+### Cria um usuário
+POST {{baseUrl}}/usuarios
+Content-Type: {{contentType}}
+
+{
+  "nome": "Ana Costa",
+  "email": "ana@email.com",
+  "senha": "1234"
+}
+
+################################################################
+# LOGIN
+################################################################
+
+### Login válido (seed: joao@email.com / 123456)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "joao@email.com",
+  "senha": "123456"
+}
+
+### Login com senha incorreta (401)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "joao@email.com",
+  "senha": "senha-errada"
+}
+
+################################################################
+# PEDIDOS
+################################################################
+
+### Lista pedidos
+GET {{baseUrl}}/pedidos
+
+### Lista pedidos de um usuário
+GET {{baseUrl}}/pedidos/usuario/1
+
+### Cria um pedido
+POST {{baseUrl}}/pedidos
+Content-Type: {{contentType}}
+
+{
+  "usuario_id": 2,
+  "itens": [
+    { "produto_id": 1, "quantidade": 1 },
+    { "produto_id": 2, "quantidade": 2 }
+  ]
+}
+
+### Cria um pedido inválido (sem itens -> 400)
+POST {{baseUrl}}/pedidos
+Content-Type: {{contentType}}
+
+{
+  "usuario_id": 2,
+  "itens": []
+}
+
+### Atualiza o status de um pedido (ajuste o id conforme necessário)
+PUT {{baseUrl}}/pedidos/1/status
+Content-Type: {{contentType}}
+
+{
+  "status": "aprovado"
+}
+
+################################################################
+# RELATORIOS
+################################################################
+
+### Relatório de vendas
+GET {{baseUrl}}/relatorios/vendas
+
+################################################################
+# ADMIN (endpoints sensíveis do projeto legado)
+################################################################
+
+### Reseta o banco de dados
+POST {{baseUrl}}/admin/reset-db
+
+### Executa uma query arbitrária
+POST {{baseUrl}}/admin/query
+Content-Type: {{contentType}}
+
+{
+  "sql": "SELECT * FROM produtos"
+}

@@ -1,0 +1,52 @@
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+################################################################
+# CHECKOUT
+################################################################
+
+### Checkout - pagamento aprovado (cartão iniciando em 4)
+POST {{baseUrl}}/api/checkout
+Content-Type: {{contentType}}
+
+{
+  "usr": "Guilherme",
+  "eml": "gui@fullcycle.com.br",
+  "pwd": "senhaforte",
+  "c_id": 2,
+  "card": "4111222233334444"
+}
+
+### Checkout - pagamento recusado (cartão não iniciando em 4)
+POST {{baseUrl}}/api/checkout
+Content-Type: {{contentType}}
+
+{
+  "usr": "João",
+  "eml": "joao@teste.com",
+  "pwd": "123",
+  "c_id": 1,
+  "card": "5111222233334444"
+}
+
+### Checkout inválido (campos obrigatórios ausentes -> 400)
+POST {{baseUrl}}/api/checkout
+Content-Type: {{contentType}}
+
+{
+  "usr": "Sem Curso"
+}
+
+################################################################
+# RELATORIOS (ADMIN)
+################################################################
+
+### Relatório financeiro administrativo
+GET {{baseUrl}}/api/admin/financial-report
+
+################################################################
+# USUARIOS
+################################################################
+
+### Remove um usuário (ajuste o id conforme necessário)
+DELETE {{baseUrl}}/api/users/1
